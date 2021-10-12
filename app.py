@@ -26,6 +26,10 @@ def createapp(config=None):
     # ROUTES
 
     # Actors Routes
+    @app.route('/')
+    def get_greeting():
+        greeting = "Hello" 
+        return greeting
 
     @app.route('/actors')
     @requires_auth('get:actors')
