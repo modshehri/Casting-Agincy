@@ -7,4 +7,4 @@ export API_AUDIENCE="modagincy"
 export ALGORITHMS=['RS256']
 export FLASK_APP=app.py
 export FLASK_ENV=development
-export DATABASE_URI="sqlite:////Users/mod/full-stack-nanoo/Casting-Agincy/database.db"
+export DATABASE_URL="sqlite:////Users/mod/full-stack-nanoo/Casting-Agincy/database.db"
