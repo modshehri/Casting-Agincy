@@ -1,8 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from datetime import date
 import os
 db = SQLAlchemy()
-
 
 
 
@@ -19,6 +19,11 @@ def setup_migrations(app):
 
 def db_drop_and_create_all():
     db.create_all()
+    actor = Actor(name = "MOD", age=23, gender="Alpha Male")
+    actor.insert()
+    movie = Movie(title="Mod's Life", release_date=date.fromisoformat('2021-10-10'))
+    movie.insert()
+
 
 
 

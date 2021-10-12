@@ -132,20 +132,17 @@ def verify_decode_jwt(token):
             return payload
 
         except jwt.ExpiredSignatureError:
-            print(1)
             raise AuthError({
                 'code': 'token_expired',
                 'description': 'Token expired.'
             }, 401)
 
         except jwt.JWTClaimsError:
-            print(2)
             raise AuthError({
                 'code': 'invalid_claims',
                 'description': 'Incorrect claims. Please, check the audience and issuer.'
             }, 401)
         except Exception:
-            print(3)
             raise AuthError({
                 'code': 'invalid_header',
                 'description': 'Unable to parse authentication token.'
