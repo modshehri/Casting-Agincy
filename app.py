@@ -9,10 +9,7 @@ from auth import AuthError, requires_auth
 
 app = Flask(__name__)
 
-database_filename = "database.db"
-project_dir = os.path.dirname(os.path.abspath(__file__))
-database_path = "sqlite:///{}".format(os.path.join(project_dir, database_filename))
-setup_db(app, database_path)
+setup_db(app)
 CORS(app)
 
 '''
@@ -28,6 +25,7 @@ db_drop_and_create_all()
 # Actors Routes
 
 @app.route('/actors')
+@requires_auth('get:actors')
 def get_actors():
     actors = Actor.query.order_by(Actor.id).all()
     return jsonify({
@@ -37,6 +35,7 @@ def get_actors():
 
 
 @app.route('/actors', methods=['POST'])
+@requires_auth('patch:actor')
 def create_actor():
     data = request.get_json()
 
@@ -56,6 +55,7 @@ def create_actor():
     })
 
 @app.route('/actors/<actor_id>', methods=['PATCH'])
+@requires_auth('patch:actor')
 def patch_actors(actor_id):
     actor = Actor.query.get(actor_id)
     if actor is None:
@@ -80,6 +80,7 @@ def patch_actors(actor_id):
     })
 
 @app.route('/actors/<actor_id>', methods=['DELETE'])
+@requires_auth('delete:actor')
 def delete_actors(actor_id):
     actor = Actor.query.get(actor_id)
     if actor is None:
@@ -95,6 +96,7 @@ def delete_actors(actor_id):
 
 # Movies Routes 
 @app.route('/movies')
+@requires_auth('get:movies')
 def get_movies():
     movies = Movie.query.order_by(Movie.id).all()
     return jsonify({
@@ -104,6 +106,7 @@ def get_movies():
 
 
 @app.route('/movies', methods=['POST'])
+@requires_auth('post:movie')
 def create_movies():
     data = request.get_json()
 
@@ -122,6 +125,7 @@ def create_movies():
     })
 
 @app.route('/movies/<movie_id>', methods=['PATCH'])
+@requires_auth('patch:movie')
 def patch_movies(movie_id):
     movie = Movie.query.get(movie_id)
     if movie is None:
@@ -143,6 +147,7 @@ def patch_movies(movie_id):
     })
 
 @app.route('/movies/<movie_id>', methods=['DELETE'])
+@requires_auth('delete:movie')
 def delete_movies(movie_id):
     movie = Movie.query.get(movie_id)
     if movie is None:
