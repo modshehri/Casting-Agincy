@@ -5,7 +5,6 @@ import os
 db = SQLAlchemy()
 
 
-
 def setup_db(app, database_path=os.getenv("DATABASE_URL")):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -19,12 +18,11 @@ def setup_migrations(app):
 
 def db_drop_and_create_all():
     db.create_all()
-    actor = Actor(name = "MOD", age=23, gender="Alpha Male")
+    actor = Actor(name="MOD", age=23, gender="Alpha Male")
     actor.insert()
-    movie = Movie(title="Mod's Life", release_date=date.fromisoformat('2021-10-10'))
+    movie = Movie(title="Mod's Life",
+                  release_date=date.fromisoformat('2021-10-10'))
     movie.insert()
-
-
 
 
 class Actor(db.Model):

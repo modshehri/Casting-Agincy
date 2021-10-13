@@ -85,6 +85,35 @@ eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ijc3V0lJRlRVQkdDYTZObDJlUFhhUyJ9.eyJ
 
 Valid tokens are provided as environment variables within the setup.sh file.
 
+## To deploy the project at Heroku
+
+- Rgister at Heroku 
+- install heroku CLI using the command
+```
+brew tap heroku/brew && brew install heroku
+```
+- Login to your Heroku account running the command
+```
+heroku login
+```
+- Create a Heroku app using teh command
+```
+heroku create name_of_your_app
+```
+- Set up your environment veriables from the file setup.sh at Heroku
+- Create a heroku add on for a postgres database using the command
+```
+heroku addons:create heroku-postgresql:hobby-dev --app name_of_your_application
+```
+- Push your project to Heroku using the command
+```
+git push heroku master
+```
+- Run your application using teh command 
+```
+heroku run python manage.py db upgrade --app name_of_your_application
+```
+
 ## Testing locally
 
 To run the tests, run

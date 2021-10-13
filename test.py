@@ -44,7 +44,6 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertTrue(data['success'])
         movie_db = Movie.query.get(data['movie']['id'])
         self.assertEqual(movie_db.get_json(), data["movie"])
-        
 
     def test_post_movies_fail_422(self):
         movie = {
@@ -83,7 +82,7 @@ class CastingAgencyTestCase(unittest.TestCase):
                                     "Authorization": "Bearer "+ASSISTANT_TOKEN
                                 })
         data = json.loads(res.data)
-        if res.status_code == 200: #since the test database maybe empty
+        if res.status_code == 200:
             self.assertTrue(data['success'])
             self.assertNotEqual(len(data['movies']), 0)
 
@@ -106,7 +105,8 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_delete_movie_fail_404(self):
         res = self.client().delete('/movies/1000',
                                    headers={
-                                       "Authorization": "Bearer "+EXECUTIVE_TOKEN})
+                                       "Authorization": "Bearer "
+                                       + EXECUTIVE_TOKEN})
         data = json.loads(res.data)
         self.assertFalse(data['success'])
         self.assertEqual(404, res.status_code)
@@ -118,7 +118,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         }
         res = self.client().patch('/movies/1000',
                                   headers={
-                                      "Authorization": "Bearer "+EXECUTIVE_TOKEN
+                                      "Authorization": "Bearer "
+                                      + EXECUTIVE_TOKEN
                                   }, json=movie)
 
         data = json.loads(res.data)
@@ -132,7 +133,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         }
         res = self.client().patch('/movies/1000',
                                   headers={
-                                      "Authorization": "Bearer "+EXECUTIVE_TOKEN
+                                      "Authorization": "Bearer "
+                                      + EXECUTIVE_TOKEN
                                   }, json=movie)
         data = json.loads(res.data)
         self.assertFalse(data['success'])
@@ -216,17 +218,17 @@ class CastingAgencyTestCase(unittest.TestCase):
                                     "Authorization": "Bearer "+ASSISTANT_TOKEN
                                 })
         data = json.loads(res.data)
-        if res.status_code == 200: #since the test database maybe empty
+        if res.status_code == 200:
             self.assertTrue(data['success'])
             self.assertNotEqual(len(data['actors']), 0)
 
     def test_delete_actors(self):
-        testing_actor = Actor(name = "MOD", age=23, gender="Alpha Male")
+        testing_actor = Actor(name="MOD", age=23, gender="Alpha Male")
         testing_actor.insert()
         actor = Actor.query.first()
         res = self.client().delete('/actors/'+str(actor.id),
                                    headers={
-            "Authorization": "Bearer "+EXECUTIVE_TOKEN})
+            "Authorization": "Bearer " + EXECUTIVE_TOKEN})
         data = json.loads(res.data)
         self.assertTrue(data['success'])
         actor = Actor.query.get(data['deleted'])
@@ -241,7 +243,8 @@ class CastingAgencyTestCase(unittest.TestCase):
     def test_delete_actor_fail_404(self):
         res = self.client().delete('/actors/1000',
                                    headers={
-                                       "Authorization": "Bearer "+EXECUTIVE_TOKEN})
+                                       "Authorization": "Bearer "
+                                       + EXECUTIVE_TOKEN})
         data = json.loads(res.data)
         self.assertFalse(data['success'])
         self.assertEqual(404, res.status_code)
@@ -266,7 +269,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         }
         res = self.client().patch('/actors/1000',
                                   headers={
-                                      "Authorization": "Bearer "+ASSISTANT_TOKEN
+                                      "Authorization": "Bearer "
+                                      + ASSISTANT_TOKEN
                                   }, json=actor)
         data = json.loads(res.data)
         self.assertFalse(data['success'])

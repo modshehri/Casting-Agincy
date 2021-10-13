@@ -10,18 +10,20 @@ AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
 ALGORITHMS = os.getenv('ALGORITHMS')
 API_AUDIENCE = os.getenv('API_AUDIENCE')
 
-## AuthError Exception
+# AuthError Exception
 '''
 AuthError Exception
 A standardized way to communicate auth failure modes
 '''
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
 
-## Auth Header
+# Auth Header
 
 '''
 get_token_auth_header() method
@@ -31,6 +33,8 @@ get_token_auth_header() method
         raise an AuthError if the header is malformed
     return the token part of the header
 '''
+
+
 def get_token_auth_header():
     """Obtains the Access Token from the Authorization Header
     """
@@ -63,16 +67,21 @@ def get_token_auth_header():
     token = parts[1]
     return token
 
+
 '''
 check_permissions(permission, payload) method
     @INPUTS
         permission: string permission (i.e. 'get:actor')
         payload: decoded jwt payload
 
-    raise an AuthError if permissions are not included in the payload
-    raise an AuthError if the requested permission string is not in the payload permissions array
+    raise an AuthError
+        if permissions are not included in the payload
+    raise an AuthError
+        if the required permission is missing
     return true otherwise
 '''
+
+
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         raise AuthError({
@@ -82,10 +91,11 @@ def check_permissions(permission, payload):
     elif permission not in payload['permissions']:
         raise AuthError({
             'code': 'Invalid_permission',
-            'description': 'Authorization header payload does not contains the right permission.'
-        }, 403)        
+            'description': 'Missing required permissions'
+        }, 403)
 
     return True
+
 
 '''
 verify_decode_jwt(token) method
@@ -98,6 +108,8 @@ verify_decode_jwt(token) method
     it should validate the claims
     return the decoded payload
 '''
+
+
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
@@ -108,7 +120,6 @@ def verify_decode_jwt(token):
             'code': 'invalid_header',
             'description': 'Authorization malformed.'
         }, 401)
-
 
     for key in jwks['keys']:
         if key['kid'] == unverified_header['kid']:
@@ -140,7 +151,7 @@ def verify_decode_jwt(token):
         except jwt.JWTClaimsError:
             raise AuthError({
                 'code': 'invalid_claims',
-                'description': 'Incorrect claims. Please, check the audience and issuer.'
+                'description': 'Incorrect claims.'
             }, 401)
         except Exception:
             raise AuthError({
@@ -152,16 +163,16 @@ def verify_decode_jwt(token):
                 'description': 'Unable to find the appropriate key.'
             }, 400)
 
+
 '''
 @requires_auth(permission) decorator method
     @INPUTS
         permission: string permission (i.e. 'post:drink')
-
-    it should use the get_token_auth_header method to get the token
-    it should use the verify_decode_jwt method to decode the jwt
-    it should use the check_permissions method validate claims and check the requested permission
-    return the decorator which passes the decoded payload to the decorated method
+    return the decorator which passes
+    the decoded payload to the decorated method
 '''
+
+
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)

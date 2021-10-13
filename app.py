@@ -7,28 +7,18 @@ from datetime import date
 from models import db_drop_and_create_all, setup_db, Actor, Movie
 from auth import AuthError, requires_auth
 
+
 def createapp(config=None):
     app = Flask(__name__)
-
     setup_db(app)
-
-
     CORS(app)
-
-    '''
-    @TODO uncomment the following line to initialize the datbase
-    !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
-    !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
-    !! Running this funciton will add one
-    '''
     db_drop_and_create_all()
-
     # ROUTES
-
     # Actors Routes
+
     @app.route('/')
     def get_greeting():
-        greeting = "Hello" 
+        greeting = "Hello"
         return greeting
 
     @app.route('/actors')
@@ -36,10 +26,9 @@ def createapp(config=None):
     def get_actors():
         actors = Actor.query.order_by(Actor.id).all()
         return jsonify({
-            "success": True, 
+            "success": True,
             "actors": [actor.get_json() for actor in actors]
         })
-
 
     @app.route('/actors', methods=['POST'])
     @requires_auth('patch:actor')
@@ -54,7 +43,7 @@ def createapp(config=None):
 
         if 'gender' not in data:
             abort(422)
-        
+
         actor_name = data['name']
         actor_gender = data['gender']
         actor_age = data['age']
@@ -63,7 +52,7 @@ def createapp(config=None):
         actor.insert()
 
         return jsonify({
-            "success": True, 
+            "success": True,
             "actor": actor.get_json()
         })
 
@@ -71,7 +60,7 @@ def createapp(config=None):
     @requires_auth('patch:actor')
     def patch_actors(actor_id):
         actor = Actor.query.get(actor_id)
-        
+
         if actor is None:
             abort(404)
 
@@ -89,7 +78,7 @@ def createapp(config=None):
         actor.update()
 
         return jsonify({
-            "success": True, 
+            "success": True,
             "actor": actor.get_json()
         })
 
@@ -103,21 +92,19 @@ def createapp(config=None):
         actor.delete()
 
         return jsonify({
-            "success": True, 
+            "success": True,
             "deleted": actor_id
         })
 
-
-    # Movies Routes 
+    # Movies Routes
     @app.route('/movies')
     @requires_auth('get:movies')
     def get_movies():
         movies = Movie.query.order_by(Movie.id).all()
         return jsonify({
-            "success": True, 
+            "success": True,
             "movies": [movie.get_json() for movie in movies]
         })
-
 
     @app.route('/movies', methods=['POST'])
     @requires_auth('post:movie')
@@ -126,7 +113,7 @@ def createapp(config=None):
 
         if 'title' and 'release_date' not in data:
             abort(422)
-        
+
         movie_release_date = date.fromisoformat(data['release_date'])
         movie_title = data['title']
 
@@ -134,7 +121,7 @@ def createapp(config=None):
         movie.insert()
 
         return jsonify({
-            "success": True, 
+            "success": True,
             "movie": movie.get_json()
         })
 
@@ -146,7 +133,6 @@ def createapp(config=None):
             abort(404)
 
         data = request.get_json()
-        
         if 'title' in data:
             movie.title = data['title']
 
@@ -155,9 +141,8 @@ def createapp(config=None):
 
         movie.update()
 
-
         return jsonify({
-            "success": True, 
+            "success": True,
             "movie": movie.get_json()
         })
 
@@ -171,14 +156,13 @@ def createapp(config=None):
         movie.delete()
 
         return jsonify({
-            "success": True, 
+            "success": True,
             "deleted": movie_id
         })
     # Error Handling
     '''
     Example error handling for unprocessable entity
     '''
-
 
     @app.errorhandler(422)
     def unprocessable(error):
@@ -203,8 +187,9 @@ def createapp(config=None):
         response.status_code = error.status_code
 
         return response
-    
+
     return app
+
 
 app = createapp()
 
